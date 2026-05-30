@@ -9,5 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatMemberResponse {
     private String userId;
+    private String username;
+    private String displayName;
+    private String profilePicture;
     private LocalDateTime joinedAt;
 }

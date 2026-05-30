@@ -102,10 +102,25 @@ public class ChatServiceImpl implements ChatService {
 
     private ChatResponse toResponse(Chat chat, List<ChatMember> members) {
         List<ChatMemberResponse> memberResponses = members.stream()
-                .map(m -> ChatMemberResponse.builder()
-                        .userId(m.getUserId())
-                        .joinedAt(m.getCreatedAt())
-                        .build())
+                .map(m -> {
+                    // Fetch user profile — fail gracefully so a user service hiccup
+                    // doesn't break the entire chat list response.
+                    String username = null, displayName = null, profilePicture = null;
+                    try {
+                        var profile = userServiceClient.getUserProfile(m.getUserId());
+                        username       = profile.getUsername();
+                        displayName    = profile.getDisplayName();
+                        profilePicture = profile.getProfilePicture();
+                    } catch (Exception ignored) {}
+
+                    return ChatMemberResponse.builder()
+                            .userId(m.getUserId())
+                            .username(username)
+                            .displayName(displayName)
+                            .profilePicture(profilePicture)
+                            .joinedAt(m.getCreatedAt())
+                            .build();
+                })
                 .toList();
 
         return ChatResponse.builder()

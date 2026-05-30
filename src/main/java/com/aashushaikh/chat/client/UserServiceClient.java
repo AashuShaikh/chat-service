@@ -9,4 +9,7 @@ public interface UserServiceClient {
 
     @GetMapping("/{id}/exists")
     void checkUserExists(@PathVariable String id);
+
+    @GetMapping("/{id}/profile")
+    UserProfileDto getUserProfile(@PathVariable String id);
 }
