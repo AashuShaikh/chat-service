@@ -105,12 +105,13 @@ public class ChatServiceImpl implements ChatService {
                 .map(m -> {
                     // Fetch user profile — fail gracefully so a user service hiccup
                     // doesn't break the entire chat list response.
-                    String username = null, displayName = null, profilePicture = null;
+                    String username = null, displayName = null, profilePicture = null, status = null;
                     try {
                         var profile = userServiceClient.getUserProfile(m.getUserId());
                         username       = profile.getUsername();
                         displayName    = profile.getDisplayName();
                         profilePicture = profile.getProfilePicture();
+                        status         = profile.getStatus();
                     } catch (Exception ignored) {}
 
                     return ChatMemberResponse.builder()
@@ -118,6 +119,7 @@ public class ChatServiceImpl implements ChatService {
                             .username(username)
                             .displayName(displayName)
                             .profilePicture(profilePicture)
+                            .status(status)
                             .joinedAt(m.getCreatedAt())
                             .build();
                 })

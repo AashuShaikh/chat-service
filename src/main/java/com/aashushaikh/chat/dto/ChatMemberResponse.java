@@ -12,5 +12,6 @@ public class ChatMemberResponse {
     private String username;
     private String displayName;
     private String profilePicture;
+    private String status;
     private LocalDateTime joinedAt;
 }
